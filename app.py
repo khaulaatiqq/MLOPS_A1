@@ -3,12 +3,11 @@ from flask import Flask, render_template, request
 import torch
 from torchvision import transforms
 from PIL import Image
+from torchvision import models
 
 app = Flask(__name__)
 
 # Load your pre-trained model
-import torch
-from torchvision import models
 model = models.alexnet(pretrained = True)
 
 model.load_state_dict(torch.load("your_model.pkl"))
@@ -34,16 +33,17 @@ transform = transforms.Compose([
 
 # Define a route to render the HTML form
 @app.route('/')
+
 def index():
     return render_template('index.html')
 
 # Define a route to handle form submission and image classification
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
         # Get the uploaded image from the form
         uploaded_image = request.files['image']
-        
         if uploaded_image:
             # Save the uploaded image to the uploads folder
             image_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_image.filename)
